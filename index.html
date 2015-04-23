@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Automatic Peak Detection of Local Maxima &mdash; PeakDetection 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PeakDetection 0.1 documentation" href="#" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<!--
+<a href="#"><img src="_static/logo.png" border="0" alt="py4sci"/></a>
+-->
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Automatic Peak Detection of Local Maxima</a></li>
+<li><a class="reference internal" href="#method">Method</a><ul>
+<li><a class="reference internal" href="#create-the-data">Create the data</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#application-sunspot-activity">Application: Sunspot Activity</a></li>
+<li><a class="reference internal" href="#application-high-harmonic-spectra">Application: High-Harmonic Spectra</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="automatic-peak-detection-of-local-maxima">
+<h1>Automatic Peak Detection of Local Maxima<a class="headerlink" href="#automatic-peak-detection-of-local-maxima" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<p>This tutorial illustrates a method for peak detection of quasi-periodic signals. We demonstrate the method using synthetic data, and present applications to astronomical data on sunspot activity, and lab data on EUV spectra from high-harmonic generation.</p>
+<p>Reference: F Scholkmann, J Boss and M Wolf. <a class="reference external" href="http://dx.doi.org/10.3390/a5040588">An Efficient Algorithm for Automatic Peak Detection in Noisy Periodic and Quasi-Periodic Signals</a>, Algorithms <strong>5</strong>, 588-603 (2012)</p>
+<p>The python code for executing is provided <a class="reference external" href="../../source/peak_detect.py">here</a>.
+Dependencies:</p>
+<ul class="simple">
+<li>python 2.7 or newer</li>
+<li>python scientific libraries: <a class="reference external" href="http://matplotlib.org/">matplotlib</a>, <a class="reference external" href="http://scipy.org/">scipy</a></li>
+</ul>
+</div>
+<div class="section" id="method">
+<h1>Method<a class="headerlink" href="#method" title="Permalink to this headline">¶</a></h1>
+<p>Imagine you have a 1-D signal <span class="math">\(x_i\)</span> sampled at locations <span class="math">\(t_i\)</span> <span class="math">\((i=1,2,...,N)\)</span>. The goal is to find the values <span class="math">\(x_i\)</span> where the signal is a local maximum. To do this we use a sliding window method. A window of size <span class="math">\(2k\)</span> slides along the data vector. The value <span class="math">\(x_{i-1}\)</span> is considered a local maximum if <span class="math">\(x_{i-1} &gt; x_{i-k-1}\)</span> and <span class="math">\(x_{i-1} &gt; x_{i+k-1}\)</span>. This process is repeated for all window sizes <span class="math">\(k=1,2,...,N/2-1\)</span>.</p>
+<div class="section" id="create-the-data">
+<h2>Create the data<a class="headerlink" href="#create-the-data" title="Permalink to this headline">¶</a></h2>
+<p>We first create and plot a synthetic data set. Here&#8217;s how it looks:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">py</span>
+
+<span class="gp">In [2]: </span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="gp">In [3]: </span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="gp">In [4]: </span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="gp">In [5]: </span><span class="n">d</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="gp">In [6]: </span><span class="n">fs</span> <span class="o">=</span> <span class="mf">20.</span> <span class="c">#80</span>
+
+<span class="gp">In [7]: </span><span class="n">f1</span> <span class="o">=</span> <span class="mf">10.</span>
+
+<span class="gp">In [8]: </span><span class="n">f2</span> <span class="o">=</span> <span class="mf">70.</span>
+
+<span class="gp">In [9]: </span><span class="n">f3</span> <span class="o">=</span> <span class="mf">5.</span>
+
+<span class="gp">In [10]: </span><span class="n">t</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>  <span class="c"># (0,5,1000)</span>
+
+<span class="gp">In [11]: </span><span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f1</span><span class="o">/</span><span class="n">fs</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f2</span><span class="o">/</span><span class="n">fs</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f3</span><span class="o">/</span><span class="n">fs</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="p">(</span><span class="n">py</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="gp">In [12]: </span><span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+<span class="gr">Out[12]: </span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x2ad11cc6e1d0</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/signal.png"><img alt="_images/signal.png" src="_images/signal.png" style="width: 4in;" /></a>
+<p>The sliding window test is implemented in a separate function:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [13]: </span><span class="k">def</span> <span class="nf">calcLMS</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<span class="gp">   ....:</span>      <span class="n">L</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">   ....:</span>      <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="gp">   ....:</span>      <span class="n">M</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">vec</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">alpha</span>
+<span class="gp">   ....:</span>      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">L</span><span class="p">)):</span>
+<span class="gp">   ....:</span>          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">size</span><span class="o">-</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+<span class="gp">   ....:</span>              <span class="n">wk</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span>
+<span class="gp">   ....:</span>              <span class="k">if</span> <span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+<span class="gp">   ....:</span>                  <span class="n">M</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="gp">   ....:</span>      <span class="k">return</span> <span class="n">M</span>
+<span class="gp">   ....:</span> 
+</pre></div>
+</div>
+<p>After applying the sliding window method we create the local maximum scalogram (LMS), <span class="math">\(M_{k,i}\)</span>. This shows where the maxima are for each window size. This is what the matrix looks like:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [14]: </span><span class="n">linfit</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="gp">In [15]: </span><span class="n">yfit</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">linfit</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+<span class="gp">In [16]: </span><span class="n">ynew</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">yfit</span>
+
+<span class="gp">In [17]: </span><span class="n">M</span> <span class="o">=</span> <span class="n">calcLMS</span><span class="p">(</span><span class="n">ynew</span><span class="p">)</span>
+
+<span class="gp">In [18]: </span><span class="n">py</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span>
+
+<span class="gp">In [19]: </span><span class="n">py</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">M</span><span class="p">);</span>
+
+<span class="gp">In [20]: </span><span class="n">py</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="gr">Out[20]: </span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span> <span class="n">at</span> <span class="mh">0x2ad11cedff90</span><span class="o">&gt;</span>
+
+<span class="gp">In [21]: </span><span class="n">py</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;k&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="gr">Out[21]: </span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span> <span class="n">at</span> <span class="mh">0x2ad11cee78d0</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/LMS.png"><img alt="_images/LMS.png" src="_images/LMS.png" style="width: 5in;" /></a>
+<p>Next, we sum over the rows in the LMS (<span class="math">\(t\)</span> axis) to determine the ideal size of the window.</p>
+<div class="math">
+\[\gamma_k = \sum_i M_{k,i}\]</div>
+<img alt="_images/gamma_k.png" src="_images/gamma_k.png" />
+<p>The global minimum of <span class="math">\(\gamma_k\)</span> (red circle) corresponds to the best window size for identifying the local maxima. The LMS is then &#8220;rescaled&#8221; to remove the data for uninteresting window sizes. The rescaled matrix is called <span class="math">\(M^{(r)}\)</span>. The final step in peak detection is to calculate the column-wise standard deviation, <span class="math">\(\sigma(t)\)</span>, of <span class="math">\(M^{(r)}\)</span>. The zeros in the standard deviation correspond to the locations of the peaks (see the paper for full details).</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [22]: </span><span class="n">gamma_k</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="gp">In [23]: </span><span class="n">lambda_m</span> <span class="o">=</span> <span class="n">gamma_k</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+
+<span class="gp">In [24]: </span><span class="n">Mr</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">lambda_m</span><span class="p">,</span> <span class="p">:]</span>
+
+<span class="gp">In [25]: </span><span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">lambda_m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">py</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="n">py</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span> <span class="n">Mr</span> <span class="o">-</span> <span class="mf">1.</span><span class="o">/</span><span class="n">lambda_m</span><span class="o">*</span> <span class="p">(</span><span class="n">py</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">lambda_m</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span> <span class="n">Mr</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the figure below we show both the data, and the standard deviation function. The value and location of the peaks are shown by the red circles.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [26]: </span><span class="n">py</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span>
+
+<span class="gp">In [27]: </span><span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">sigma</span><span class="p">);</span>
+
+<span class="gp">In [28]: </span><span class="n">peakIdx</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">sigma</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="gp">In [29]: </span><span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="s">&#39;or&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s">&#39;None&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="gr">Out[29]: </span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x2ad11cbf56d0</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="_images/x_and_sigmaVs_t.png" src="_images/x_and_sigmaVs_t.png" />
+</div>
+</div>
+<div class="section" id="application-sunspot-activity">
+<h1>Application: Sunspot Activity<a class="headerlink" href="#application-sunspot-activity" title="Permalink to this headline">¶</a></h1>
+<p>As a real-life application we consider sunspot activity. Data on sunspot activity can be downloaded from the <a class="reference external" href="http://sidc.oma.be/DATA/monthssn.dat">Royal Observatory of Belgium</a>. We use the algorithm to find the location of the peak sunspot activity and identify the periodicity.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">py</span>
+<span class="kn">import</span> <span class="nn">peak_detect</span>
+
+<span class="n">c</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&#39;monthssn.dat&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">peakIdx</span> <span class="o">=</span> <span class="n">peak_detect</span><span class="o">.</span><span class="n">getPeaks</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">py</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">]))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">py</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">]))</span>
+
+
+<span class="n">py</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="s">&#39;or&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s">&#39;None&#39;</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">,</span><span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">py</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1750</span><span class="p">,</span><span class="mi">270</span><span class="p">,</span> <span class="s">&#39;Period: </span><span class="si">%.4g</span><span class="s"> +/- </span><span class="si">%.4g</span><span class="s"> years&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">mu</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="./pyplots/sunspots.py">Source code</a>, <a class="reference external" href="./pyplots/sunspots.png">png</a>, <a class="reference external" href="./pyplots/sunspots.hires.png">hires.png</a>, <a class="reference external" href="./pyplots/sunspots.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/sunspots.png" src="_images/sunspots.png" />
+</div>
+</div>
+<div class="section" id="application-high-harmonic-spectra">
+<h1>Application: High-Harmonic Spectra<a class="headerlink" href="#application-high-harmonic-spectra" title="Permalink to this headline">¶</a></h1>
+<p>As a final application we consider locating the peaks in a high harmonic spectrum. This is could be useful for calibrating an energy scale in the spectrum, or locating absorption peaks.</p>
+<p>We measured an EUV spectrum from high-harmonic generation in Ne. The spectrum consists of a comb of peaks spaced by twice the photon energy (<span class="math">\(\hbar \omega=1.54\)</span> eV for our laser). The spectrum extends up to 72.7 eV (harmonic 47) where it is cutoff by the L<sub>3</sub> edge of an aluminum filter.</p>
+<p>The raw data looks like:</p>
+<img alt="_images/NeSpectrum2D.png" src="_images/NeSpectrum2D.png" />
+<p>We next integrate over the rows in the image where the light appears. Then, we find the peaks:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">im0</span><span class="p">[</span><span class="mi">400</span><span class="p">:</span><span class="mi">560</span><span class="p">,:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="n">peakIdx</span> <span class="o">=</span> <span class="n">peak_detect</span><span class="o">.</span><span class="n">getPeaks</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+<span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+<span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="s">&#39;or&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s">&#39;None&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/NeSpectrum.png" src="_images/NeSpectrum.png" />
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, csmeenk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
