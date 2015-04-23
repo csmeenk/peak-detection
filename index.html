@@ -87,6 +87,7 @@
             
   <div class="section" id="automatic-peak-detection-of-local-maxima">
 <h1>Automatic Peak Detection of Local Maxima<a class="headerlink" href="#automatic-peak-detection-of-local-maxima" title="Permalink to this headline">¶</a></h1>
+<p>By: <a class="reference external" href="http://sites.google.com/site/csmeenk">Christopher Smeenk</a></p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
@@ -129,7 +130,7 @@ Dependencies:</p>
 <span class="gp">In [11]: </span><span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f1</span><span class="o">/</span><span class="n">fs</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f2</span><span class="o">/</span><span class="n">fs</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">py</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f3</span><span class="o">/</span><span class="n">fs</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="p">(</span><span class="n">py</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="gp">In [12]: </span><span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
-<span class="gr">Out[12]: </span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x2ad11cc6e1d0</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="gr">Out[12]: </span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x2adfa30d7990</span><span class="o">&gt;</span><span class="p">]</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/signal.png"><img alt="_images/signal.png" src="_images/signal.png" style="width: 4in;" /></a>
@@ -161,10 +162,10 @@ Dependencies:</p>
 <span class="gp">In [19]: </span><span class="n">py</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">M</span><span class="p">);</span>
 
 <span class="gp">In [20]: </span><span class="n">py</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-<span class="gr">Out[20]: </span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span> <span class="n">at</span> <span class="mh">0x2ad11cedff90</span><span class="o">&gt;</span>
+<span class="gr">Out[20]: </span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span> <span class="n">at</span> <span class="mh">0x2adfa3357790</span><span class="o">&gt;</span>
 
 <span class="gp">In [21]: </span><span class="n">py</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;k&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-<span class="gr">Out[21]: </span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span> <span class="n">at</span> <span class="mh">0x2ad11cee78d0</span><span class="o">&gt;</span>
+<span class="gr">Out[21]: </span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span> <span class="n">at</span> <span class="mh">0x2adfa308f990</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/LMS.png"><img alt="_images/LMS.png" src="_images/LMS.png" style="width: 5in;" /></a>
@@ -190,7 +191,7 @@ Dependencies:</p>
 <span class="gp">In [28]: </span><span class="n">peakIdx</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">sigma</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
 <span class="gp">In [29]: </span><span class="n">py</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">peakIdx</span><span class="p">],</span> <span class="s">&#39;or&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s">&#39;None&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-<span class="gr">Out[29]: </span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x2ad11cbf56d0</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="gr">Out[29]: </span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x2adfa3464a10</span><span class="o">&gt;</span><span class="p">]</span>
 </pre></div>
 </div>
 <img alt="_images/x_and_sigmaVs_t.png" src="_images/x_and_sigmaVs_t.png" />

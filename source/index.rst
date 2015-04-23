@@ -6,6 +6,7 @@
 Automatic Peak Detection of Local Maxima
 =========================================
 
+By: `Christopher Smeenk <http://sites.google.com/site/csmeenk>`_
 
 .. toctree::
    :maxdepth: 2
